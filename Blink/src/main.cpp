@@ -6,7 +6,7 @@ void setup()
 {
   Serial.begin(115200);
   Serial.setTxTimeoutMs(0);
-  Serial.println("Starting Blink...");
+  Serial.println("Starting...");
 
   pinMode(0, OUTPUT);
   pinMode(1, OUTPUT);

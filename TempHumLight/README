@@ -1,4 +1,3 @@
 
 # Temperuate, Humidity and Light on the [Unity Sensor Board](https://loopon.tech/products/unity-sensor)
 This project prints the readings from the HDC1080 (temperature/humidity) and the BH1750 (light) sensors.
-

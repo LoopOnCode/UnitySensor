@@ -13,7 +13,7 @@ void setup()
 {
   Serial.begin(115200);
   Serial.setTxTimeoutMs(0);
-  Serial.println("Starting Rainbow...");
+  Serial.println("Starting...");
 
   FastLED.addLeds<WS2812B, LED_PIN, GRB>(leds, NUM_LEDS);
   FastLED.setBrightness(BRIGHTNESS);

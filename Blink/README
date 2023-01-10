@@ -1,4 +1,3 @@
 
 # Blink for [Unity Sensor Board](https://loopon.tech/products/unity-sensor)
 This project blinks LEDs on all GPIO ports.
-

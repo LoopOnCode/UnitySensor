@@ -10,7 +10,7 @@ void setup()
 {
   Serial.begin(115200);
   Serial.setTxTimeoutMs(0);
-  Serial.println("Starting Sensors...");
+  Serial.println("Starting...");
 
   Wire.begin(5, 6);
   hdc1080.begin(0x40);

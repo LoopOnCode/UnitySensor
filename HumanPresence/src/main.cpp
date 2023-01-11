@@ -19,10 +19,10 @@ void setup()
 
   while (!radar.begin(Serial1))
   {
-    Serial.println(F("Sensor not connected!"));
+    Serial.println("Sensor not connected!");
     delay(1000);
   }
-  Serial.println(F("Sensor connected."));
+  Serial.println("Sensor connected.");
 }
 
 void loop()
@@ -35,20 +35,20 @@ void loop()
     {
       if (radar.stationaryTargetDetected())
       {
-        Serial.print(F("Distance: "));
+        Serial.print("Distance: ");
         Serial.print(radar.stationaryTargetDistance());
-        Serial.println(F("cm - Stationary"));
+        Serial.println("cm - Stationary");
       }
       if (radar.movingTargetDetected())
       {
-        Serial.print(F("Distance: "));
+        Serial.print("Distance: ");
         Serial.print(radar.movingTargetDistance());
-        Serial.println(F("cm - Moving"));
+        Serial.println("cm - Moving");
       }
     }
     else
     {
-      Serial.println(F("No target"));
+      Serial.println("No target");
     }
   }
 }

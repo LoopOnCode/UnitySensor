@@ -1,0 +1,14 @@
+
+# Bluetooth for [Unity Sensor Board](https://loopon.tech/products/unity-sensor)
+This project will will connect as a Bluetooth keyboard and type a a few sentences.
+
+## Windows
+1. Go to Settings -> Bluetooth & Devices -> Add device
+2. Select Bluetooth
+3. After the scan has completed, Unity Keyboard should appear. Click and add device
+4. Open Notepad.exe and watch it type
+
+## Android
+1. Go to Settings -> Device connection -> Pair new device
+2. Select Unity Keyboard in the list
+3. Open a notepad app and watch it type

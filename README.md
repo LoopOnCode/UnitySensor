@@ -14,8 +14,10 @@ Once flashing has completed. Prese the reset button to restart in normal mode.
 ## Projects
 ### 1. [Blink](/Blink)
 This project blinks LEDs on all GPIO ports.
+
 ### 2. [Bluetooth Keyboard](/BluetoothKeyboard)
 This project will will connect as a Bluetooth keyboard and type a a few sentences.
+
 ### Windows Setup
 1. Go to Settings -> Bluetooth & Devices -> Add device
 2. Select Bluetooth
@@ -26,10 +28,16 @@ This project will will connect as a Bluetooth keyboard and type a a few sentence
 1. Go to Settings -> Device connection -> Pair new device
 2. Select Unity Keyboard in the list
 3. Open a notepad app and watch it type
-### 3. [Rainbow](/Rainbow)
+
+### 3. [Human Presence](/HumanPresence)
+This project uses the LD2410 sensor to read the distance of a stationary or moving human.
+
+### 4. [Rainbow](/Rainbow)
 This project cycles through colours of the rainbow using the onboard RGB LED.
-### 4. [Temperature, Humidity and Ambient Light](/TempHumLight)
+
+### 5. [Temperature, Humidity and Ambient Light](/TempHumLight)
 This project prints the readings from the HDC1080 (temperature/humidity) and the BH1750 (light) sensors.
-### 5. [WiFi Scanning](/WiFiScan)
+
+### 6. [WiFi Scanning](/WiFiScan)
 This project will scan and print WiFi access points.
 

@@ -1,7 +1,10 @@
 
 # [Unity Sensor Board](https://loopon.tech/products/unity-sensor)
 This repository contains example code for the Unity sensor board.
-Specs can be found at https://loopon.tech/products/unity-sensor
+Specifications of the board can be found at https://loopon.tech/products/unity-sensor
+
+## Platform IO
+Installation guide can be found here: https://platformio.org/install/ide?install=vscode
 
 ## Flashing the Unity board
 To flash the Unity board, the ESP32 must be put in the correct boot mode:

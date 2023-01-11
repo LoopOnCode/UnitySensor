@@ -3,6 +3,10 @@
 This repository contains example code for the Unity sensor board.
 Specifications of the board can be found at https://loopon.tech/products/unity-sensor
 
+<p align="center">
+  <img width="260" src="./images/UnityBoard.JPG">
+</p>
+
 ## Platform IO
 Installation guide can be found here: https://platformio.org/install/ide?install=vscode
 

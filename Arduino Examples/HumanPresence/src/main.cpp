@@ -14,6 +14,7 @@ void setup()
   Serial.begin(115200);
   Serial.setTxTimeoutMs(0);
   Serial.println("Starting...");
+  radar.debug(Serial);
 
   Serial1.begin(BAUDRATE, SERIAL_8N1, RX_PIN, TX_PIN);
 

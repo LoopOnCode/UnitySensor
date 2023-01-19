@@ -1,3 +1,6 @@
+## Unity by LoopOn
+## https://loopon.tech/products/unity-sensor
+
 substitutions:
   device_name_lower: unity
   device_name: Unity
@@ -10,6 +13,10 @@ substitutions:
   illuminance_offset: "0"
   bh1750_addr: "0x23" # Addr pad unsoldered=0x23 / soldered=0x5C
   ld2410_name: "mmWave"
+
+external_components:
+  source: github://looponcode/unitysensor/esphome@main
+  components: [ld2410_uart]
 
 esphome:
   name: "${device_name_lower}"
@@ -28,8 +35,6 @@ esphome:
     board_build.flash_size: 4MB
     build_flags: -DARDUINO_USB_MODE=1 -DARDUINO_USB_CDC_ON_BOOT=1 -DARDUINO_ESP32C3_DEV=1
     upload_speed: 115200
-  includes:
-    - ld2410_uart.h
   on_boot:
     priority: 600
     then:
@@ -52,9 +57,9 @@ esp32:
   framework:
     type: arduino
 
-# dashboard_import:
-#   package_import_url: github://.....@main
-#   import_full_config: true
+dashboard_import:
+  package_import_url: github://looponcode/unitysensor/esphome/loopon_unity.yaml@main
+  import_full_config: true
 
 logger:
   baud_rate: 0 # LD2410 config issues when logger is enabled
@@ -238,7 +243,7 @@ number:
           auto uart_ld2410 = static_cast<LD2410 *>(ld2410);
           uart_ld2410->setAllSensitivity(x);
       - delay: 50ms
-      - lambda: 'static_cast<LD2410 *>(ld2410)->queryParameters();'
+      - lambda: "static_cast<LD2410 *>(ld2410)->queryParameters();"
       - delay: 50ms
       - script.execute: config_off_ld2410
 button:

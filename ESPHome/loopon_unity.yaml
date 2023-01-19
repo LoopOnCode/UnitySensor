@@ -14,10 +14,6 @@ substitutions:
   bh1750_addr: "0x23" # Addr pad unsoldered=0x23 / soldered=0x5C
   ld2410_name: "mmWave"
 
-external_components:
-  source: github://looponcode/unitysensor/esphome@main
-  components: [ld2410_uart]
-
 esphome:
   name: "${device_name_lower}"
   comment: "${device_name} by ${device_make}"
@@ -35,6 +31,8 @@ esphome:
     board_build.flash_size: 4MB
     build_flags: -DARDUINO_USB_MODE=1 -DARDUINO_USB_CDC_ON_BOOT=1 -DARDUINO_ESP32C3_DEV=1
     upload_speed: 115200
+  includes:
+    - ld2410_uart.h
   on_boot:
     priority: 600
     then:

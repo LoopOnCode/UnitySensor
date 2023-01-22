@@ -54,10 +54,12 @@ esp32:
   variant: esp32c3
   framework:
     type: arduino
+    version: 2.0.6
+    platform_version: 6.0.0
 
 dashboard_import:
   package_import_url: github://looponcode/unitysensor/esphome/loopon_unity.yaml@main
-  import_full_config: true
+  import_full_config: false
 
 logger:
   baud_rate: 0 # LD2410 config issues when logger is enabled
@@ -68,10 +70,8 @@ ota:
 
 wifi:
   fast_connect: false
-  power_save_mode: none
-  output_power: 20.0
+  output_power: 15
   ap:
-    ssid: "${device_name}"
     ap_timeout: "15s"
 
 captive_portal:
@@ -89,6 +89,9 @@ custom_component:
       return {new LD2410(id(uart1))};
     components:
       - id: ld2410
+
+esp32_improv:
+  authorizer: none
 
 i2c:
   sda: GPIO5
@@ -131,7 +134,16 @@ binary_sensor:
       - name: "${device_name} Has Still Human Target"
         device_class: motion
         icon: "mdi:motion-sensor"
-
+  - platform: gpio
+    id: boot_button
+    pin:
+      number: GPIO9
+      inverted: true
+      mode:
+        input: true
+        pullup: true
+    name: "${device_name} Button"
+ 
 sensor:
   - platform: wifi_signal
     name: "${device_name} WiFi Signal"
@@ -256,10 +268,14 @@ button:
       script.execute: reboot_ld2410
   - platform: template
     name: "${device_name} Factory Reset ${ld2410_name}"
-    icon: "mdi:backup-restore"
+    icon: "mdi:restart-alert"
     entity_category: config
     on_press:
       - script.execute: factory_reset_ld2410
+  - platform: factory_reset
+    name: ${device_name} Factory Reset
+    icon: "mdi:restart-alert"
+    entity_category: config
 
 script:
   - id: config_on_ld2410

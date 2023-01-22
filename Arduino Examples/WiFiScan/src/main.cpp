@@ -11,6 +11,7 @@ void setup()
 
   WiFi.mode(WIFI_STA);
   WiFi.disconnect();
+  WiFi.setTxPower(WIFI_POWER_15dBm);
 }
 
 void loop()

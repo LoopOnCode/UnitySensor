@@ -8,9 +8,6 @@ substitutions:
   device_make: LoopOn
   sw_version: "1.0.0"
   hw_version: "1"
-  temperature_offset: "0.0"
-  humidity_offset: "0.0"
-  illuminance_offset: "0"
   bh1750_addr: "0x23" # Addr pad unsoldered=0x23 / soldered=0x5C
   ld2410_name: "mmWave"
 
@@ -59,7 +56,7 @@ esp32:
 
 dashboard_import:
   package_import_url: github://looponcode/unitysensor/esphome/loopon_unity.yaml@main
-  import_full_config: false
+  import_full_config: true
 
 logger:
   baud_rate: 0 # LD2410 config issues when logger is enabled
@@ -106,6 +103,8 @@ light:
     pin: GPIO2
     num_leds: 1
     name: "${device_name} Light"
+    gamma_correct: 0
+    restore_mode: RESTORE_DEFAULT_OFF
 
 text_sensor:
   - platform: template
@@ -136,6 +135,7 @@ binary_sensor:
         icon: "mdi:motion-sensor"
   - platform: gpio
     id: boot_button
+    icon: "mdi:button-pointer"
     pin:
       number: GPIO9
       inverted: true
@@ -143,7 +143,7 @@ binary_sensor:
         input: true
         pullup: true
     name: "${device_name} Button"
- 
+
 sensor:
   - platform: wifi_signal
     name: "${device_name} WiFi Signal"
@@ -152,17 +152,17 @@ sensor:
     temperature:
       name: "${device_name} Temperature"
       filters:
-        offset: ${temperature_offset}
+        - lambda: "return x+id(temperature_offset).state;"
     humidity:
       name: "${device_name} Humidity"
       filters:
-        offset: ${humidity_offset}
+        - lambda: "return x+id(humidity_offset).state;"
     update_interval: 10s
   - platform: bh1750
     name: "${device_name} Illuminance"
     address: ${bh1750_addr}
     filters:
-      offset: ${illuminance_offset}
+      - lambda: "return x+id(illuminance_offset).state;"
     update_interval: 10s
   - platform: custom
     lambda: |-
@@ -200,12 +200,14 @@ number:
     name: "${device_name} Human Distance Range"
     id: distance_range_ld2410
     unit_of_measurement: "m"
+    icon: "mdi:arrow-left-right"
     min_value: 0.75
     max_value: 6
     step: 0.75
     mode: box
     update_interval: never
     optimistic: true
+    entity_category: config
     set_action:
       - script.execute: config_on_ld2410
       - delay: 50ms
@@ -220,12 +222,14 @@ number:
     name: "${device_name} Human Clear Delay"
     id: none_duration_ld2410
     unit_of_measurement: "s"
+    icon: "mdi:timer"
     min_value: 0
     max_value: 900
     step: 1
     mode: box
     update_interval: never
     optimistic: true
+    entity_category: config
     set_action:
       - script.execute: config_on_ld2410
       - delay: 50ms
@@ -240,12 +244,14 @@ number:
     name: "${device_name} Human Sensitivity Threshold"
     id: sensitivity_threshold_ld2410
     unit_of_measurement: "%"
+    icon: "mdi:car-cruise-control"
     min_value: 0
     max_value: 100
     step: 10
     mode: box
     update_interval: never
     optimistic: true
+    entity_category: config
     set_action:
       - script.execute: config_on_ld2410
       - delay: 50ms
@@ -256,6 +262,49 @@ number:
       - lambda: "static_cast<LD2410 *>(ld2410)->queryParameters();"
       - delay: 50ms
       - script.execute: config_off_ld2410
+  - platform: template
+    name: "${device_name} Temperature Offset"
+    id: temperature_offset
+    unit_of_measurement: "°C"
+    min_value: -5
+    max_value: 5
+    step: 0.1
+    mode: box
+    update_interval: never
+    optimistic: true
+    restore_value: true
+    initial_value: 0
+    icon: "mdi:thermometer"
+    entity_category: config
+  - platform: template
+    name: "${device_name} Humidity Offset"
+    id: humidity_offset
+    unit_of_measurement: "%"
+    min_value: -10
+    max_value: 10
+    step: 0.1
+    mode: box
+    update_interval: never
+    optimistic: true
+    restore_value: true
+    initial_value: 0
+    icon: "mdi:water-percent"
+    entity_category: config
+  - platform: template
+    name: "${device_name} Illuminance Offset"
+    id: illuminance_offset
+    unit_of_measurement: "lx"
+    min_value: -50
+    max_value: 50
+    step: 1
+    mode: box
+    update_interval: never
+    optimistic: true
+    restore_value: true
+    initial_value: 0
+    icon: "mdi:brightness-5"
+    entity_category: config
+
 button:
   - platform: restart
     name: "${device_name} Restart"

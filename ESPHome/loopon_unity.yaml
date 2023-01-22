@@ -7,9 +7,9 @@ substitutions:
   device_make_lower: loopon
   device_make: LoopOn
   sw_version: "1.0.0"
-  hw_version: "1"
+  hw_version: "1.0"
   bh1750_addr: "0x23" # Addr pad unsoldered=0x23 / soldered=0x5C
-  ld2410_name: "mmWave"
+  ld2410_name: mmWave
 
 esphome:
   name: "${device_name_lower}"
@@ -56,7 +56,7 @@ esp32:
 
 dashboard_import:
   package_import_url: github://looponcode/unitysensor/esphome/loopon_unity.yaml@main
-  import_full_config: true
+  import_full_config: false
 
 logger:
   baud_rate: 0 # LD2410 config issues when logger is enabled

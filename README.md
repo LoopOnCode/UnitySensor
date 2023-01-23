@@ -7,6 +7,15 @@ Specifications of the board can be found at https://loopon.tech/products/unity-s
   <img width="260" src="./images/UnityBoard.JPG">
 </p>
 
+# Table of Contents
+- [Flashing the Unity Board](#flashing-the-unity-board)
+- [Arduino Example Projects](#arduino-example-projects)
+- [ESPHome](#esphome)
+  * [Connecting to WiFi Network](#connecting-to-wifi-network)
+  * [Home Assistant](#home-assistant)
+  * [Modifying ESPHome Config](#modifying-esphome-config)
+
+
 # Flashing the Unity Board
 To flash the Unity board, it must be put in the correct boot mode.
 You can do this by:
@@ -14,14 +23,14 @@ You can do this by:
 1. Momentarily pressing the reset button.
 1. Then, releasing the boot button.
 
-Once flashing has completed. Press the reset button to restart in normal mode.
+Once flashing has completed, press the reset button to restart in normal mode.
 
-# Arduino Exmaple Projects
+# Arduino Example Projects
 
 ### PlatformIO
 PlatformIO is a cross-platform IDE extension for Visual Studio Code.
 Use PlatformIO to open, build and upload the example projects to the Unity board. 
-The installation guide can be found [here](https://platformio.org/install/ide?install=vs code).
+The installation guide can be found [here](https://platformio.org/install/ide?install=vscode).
 
 ### 1. [Blink](/Arduino%20Examples/Blink)
 This project will blink LEDs on all GPIO ports.

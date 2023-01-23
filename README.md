@@ -21,7 +21,6 @@ Specifications of the board can be found at https://loopon.tech/products/unity-s
     - [5. Temperature, Humidity and Ambient Light](#5-temperature-humidity-and-ambient-light)
     - [6. WiFi Scanning](#6-wifi-scanning)
 
-
 # Getting Started
 The Unity board comes pre-installed with ESPHome. The configuration can be found [here](/ESPHome/loopon_unity.yaml).
 
@@ -59,20 +58,20 @@ You must have the ESPHome Add-on installed. If you do not have the Add-on then f
 Home Assistant and the ESPHome Add-on will automatically detect the Unity device.
 
 You can find the device in:
-* Integrations: <a href="https://my.home-assistant.io/redirect/integrations/" target="_blank"><img src="https://my.home-assistant.io/badges/integrations.svg"></a>
+* Integrations: [![Open your Home Assistant instance and show your integrations.](https://my.home-assistant.io/badges/integrations.svg)](https://my.home-assistant.io/redirect/integrations/)
 <p align="center">
   <img height="200" src="./images/HomeAssistantUnityDiscover.png">
 </p>
 
-* ESPHome Dashboard: <a href="https://my.home-assistant.io/redirect/supervisor_ingress/?addon=5c53de3b_esphome" target="_blank"><img src="https://my.home-assistant.io/badges/supervisor_addon.svg"></a>
+* ESPHome Dashboard: [![Open your Home Assistant instance and Open the ingress URL of a Supervisor add-on.](https://my.home-assistant.io/badges/supervisor_addon.svg)](https://my.home-assistant.io/redirect/supervisor_ingress/?addon=5c53de3b_esphome)
 <p align="center">
   <img height="200" src="./images/EspHomeUnityDiscover.png">
 </p>
 
-Note: If the device does not show up then please try restarting Home Assistant.
+Note: If the device does not show up then please try restarting Home Assistant. [![Open your Home Assistant instance and show your server controls.](https://my.home-assistant.io/badges/server_controls.svg)](https://my.home-assistant.io/redirect/server_controls/)
 
 ### View Device<!-- omit from toc -->
-You can now view the Unity board in <a href="https://my.home-assistant.io/redirect/devices/" target="_blank"><img src="https://my.home-assistant.io/badges/devices.svg"></a>
+You can now view the Unity board in [![Open your Home Assistant instance and show your devices.](https://my.home-assistant.io/badges/devices.svg)](https://my.home-assistant.io/redirect/devices/)
 <p align="center">
   <img width="360" src="./images/HomeAssistantUnityDevice.png">
 </p>

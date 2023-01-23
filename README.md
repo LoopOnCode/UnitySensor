@@ -1,5 +1,5 @@
 
-# [Unity Sensor Board](https://loopon.tech/products/unity-sensor)
+# [Unity Sensor Board](https://loopon.tech/products/unity-sensor)<!-- omit from toc -->
 This repository contains the pre-installed ESPHome config and example Arduino code projects for the Unity sensor board.
 Specifications of the board can be found at https://loopon.tech/products/unity-sensor
 
@@ -7,26 +7,15 @@ Specifications of the board can be found at https://loopon.tech/products/unity-s
   <img width="260" src="./images/UnityBoard.JPG">
 </p>
 
-# Table of Contents
-- [Unity Sensor Board](#unity-sensor-board)
-- [Table of Contents](#table-of-contents)
+# Table of Contents<!-- omit from toc -->
 - [Getting Started](#getting-started)
   - [Connecting to WiFi](#connecting-to-wifi)
-    - [Using Imrpov](#using-imrpov)
-    - [Using the Access Point](#using-the-access-point)
   - [Home Assistant](#home-assistant)
-    - [Discovery](#discovery)
-    - [View Device](#view-device)
   - [Modifying ESPHome Config](#modifying-esphome-config)
-    - [Using ESPHome Dashboard (Easy)](#using-esphome-dashboard-easy)
-    - [Using ESPHome CLI (Medium)](#using-esphome-cli-medium)
 - [Flashing the Unity Board](#flashing-the-unity-board)
 - [Arduino Example Projects](#arduino-example-projects)
-    - [PlatformIO](#platformio)
     - [1. Blink](#1-blink)
     - [2. Bluetooth Keyboard](#2-bluetooth-keyboard)
-    - [Windows Setup](#windows-setup)
-    - [Android Setup](#android-setup)
     - [3. Human Presence](#3-human-presence)
     - [4. Rainbow](#4-rainbow)
     - [5. Temperature, Humidity and Ambient Light](#5-temperature-humidity-and-ambient-light)
@@ -39,7 +28,7 @@ The Unity board comes pre-installed with ESPHome. The configuration can be found
 ## Connecting to WiFi
 There are two ways to connect the Unity board to your WiFi network:
 
-### Using Imrpov
+### Using Imrpov<!-- omit from toc -->
 1. Power up the Unity board.
 1. Go to https://www.improv-wifi.com/ on your phone or a computer with Bluetooth.
 1. Click "Connect device to Wi-Fi".
@@ -51,7 +40,7 @@ There are two ways to connect the Unity board to your WiFi network:
 5. Input your SSID and password.
 1. Click Save.
 
-### Using the Access Point
+### Using the Access Point<!-- omit from toc -->
 1. Power up the Unity board.
 1. On you phone or computer, search for the "Unity" WiFi network.
 1. Once connected, you will be redirected to WiFi setup page. If you are not redirected, open a browser and go to http://192.168.4.1
@@ -66,7 +55,7 @@ There are two ways to connect the Unity board to your WiFi network:
 Once you have successfully connected to your WiFi network, you can integrate the device to Home Assistant.
 You must have the ESPHome Add-on installed. If you do not have the Add-on then follow the 'Installing ESPHome Dashboard' guide [here](https://esphome.io/guides/getting_started_hassio.html).
 
-### Discovery
+### Discovery<!-- omit from toc -->
 Home Assistant and the ESPHome Add-on will automatically detect the Unity device.
 
 You can find the device in:
@@ -82,7 +71,7 @@ You can find the device in:
 
 Note: If the device does not show up then please try restarting Home Assistant.
 
-### View Device
+### View Device<!-- omit from toc -->
 You can now view the Unity board in <a href="https://my.home-assistant.io/redirect/devices/" target="_blank"><img src="https://my.home-assistant.io/badges/devices.svg"></a>
 <p align="center">
   <img width="360" src="./images/HomeAssistantUnityDevice.png">
@@ -96,11 +85,10 @@ For best results, use the recommended settings in the screenshot below for the h
 ## Modifying ESPHome Config
 You can modify the way the device behaves by compiling and flashing the Unity board.
 
-### Using ESPHome Dashboard (Easy)
+### Using ESPHome Dashboard (Easy)<!-- omit from toc -->
 *(Work in progress)*
 
-### Using ESPHome CLI (Medium)
-
+### Using ESPHome CLI (Medium)<!-- omit from toc -->
 With ESPHome installed on your computer ([guide](https://esphome.io/guides/installing_esphome.html)), you can clone and modify the [loopon_unity.yaml](./ESPHome/loopon_unity.yaml), compile and flash the Unity board.
 
 To compile and flash use:
@@ -131,7 +119,7 @@ Once flashing has completed, press the reset button to restart in normal mode.
 
 # Arduino Example Projects
 
-### PlatformIO
+### PlatformIO<!-- omit from toc -->
 PlatformIO is a cross-platform IDE extension for Visual Studio Code.
 Use PlatformIO to open, build and upload the example projects to the Unity board. 
 The installation guide can be found [here](https://platformio.org/install/ide?install=vscode).
@@ -142,13 +130,13 @@ This project will blink LEDs on all GPIO ports.
 ### 2. [Bluetooth Keyboard](/Arduino%20Examples/BluetoothKeyboard)
 This project will simulate a Bluetooth keyboard and will type a few sentences when connected to a computer or mobile device. 
 
-### Windows Setup
+### Windows Setup<!-- omit from toc -->
 1. Go to Settings -> Bluetooth & Devices -> Add device.
 1. Select Bluetooth.
 1. After the scan has completed, Unity Keyboard should appear. Click and add device.
 1. Open Notepad.exe and watch it type.
 
-### Android Setup
+### Android Setup<!-- omit from toc -->
 1. Go to Settings -> Device connection -> Pair new device.
 1. Select Unity Keyboard in the list.
 1. Open a notepad app and watch it type.

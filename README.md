@@ -58,20 +58,20 @@ You must have the ESPHome Add-on installed. If you do not have the Add-on then f
 Home Assistant and the ESPHome Add-on will automatically detect the Unity device.
 
 You can find the device in:
-* Integrations: [![Open your Home Assistant instance and show your integrations.](https://my.home-assistant.io/badges/integrations.svg)](https://my.home-assistant.io/redirect/integrations/)
+* Integrations: <a href="https://my.home-assistant.io/redirect/integrations/" target="_blank"><img src="https://my.home-assistant.io/badges/integrations.svg"></a>
 <p align="center">
   <img height="200" src="./images/HomeAssistantUnityDiscover.png">
 </p>
 
-* ESPHome Dashboard: [![Open your Home Assistant instance and Open the ingress URL of a Supervisor add-on.](https://my.home-assistant.io/badges/supervisor_addon.svg)](https://my.home-assistant.io/redirect/supervisor_ingress/?addon=5c53de3b_esphome)
+* ESPHome Dashboard: <a href="https://my.home-assistant.io/redirect/supervisor_ingress/?addon=5c53de3b_esphome" target="_blank"><img src="https://my.home-assistant.io/badges/supervisor_addon.svg"></a>
 <p align="center">
   <img height="200" src="./images/EspHomeUnityDiscover.png">
 </p>
 
-Note: If the device does not show up then please try restarting Home Assistant. [![Open your Home Assistant instance and show your server controls.](https://my.home-assistant.io/badges/server_controls.svg)](https://my.home-assistant.io/redirect/server_controls/)
+Note: If the device does not show up then please try restarting Home Assistant.
 
 ### View Device<!-- omit from toc -->
-You can now view the Unity board in [![Open your Home Assistant instance and show your devices.](https://my.home-assistant.io/badges/devices.svg)](https://my.home-assistant.io/redirect/devices/)
+You can now view the Unity board in <a href="https://my.home-assistant.io/redirect/devices/" target="_blank"><img src="https://my.home-assistant.io/badges/devices.svg"></a>
 <p align="center">
   <img width="360" src="./images/HomeAssistantUnityDevice.png">
 </p>

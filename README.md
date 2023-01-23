@@ -1,30 +1,33 @@
 
 # [Unity Sensor Board](https://loopon.tech/products/unity-sensor)
-This repository contains ESPHome config and example Arduino code for the Unity sensor board.
+This repository contains the pre-installed ESPHome config and example Arduino code projects for the Unity sensor board.
 Specifications of the board can be found at https://loopon.tech/products/unity-sensor
 
 <p align="center">
   <img width="260" src="./images/UnityBoard.JPG">
 </p>
 
-# Flashing the Unity board
-To flash the Unity board, the ESP32 must be put in the correct boot mode:
-1. Hold down the boot button.
-1. Press the reset button.
-1. Release the boot button.
+# Flashing the Unity Board
+To flash the Unity board, it must be put in the correct boot mode.
+You can do this by:
+1. Holding down the boot button.
+1. Momentarily pressing the reset button.
+1. Then, releasing the boot button.
 
-Once flashing has completed. Prese the reset button to restart in normal mode.
+Once flashing has completed. Press the reset button to restart in normal mode.
 
 # Arduino Exmaple Projects
 
-### Platform IO
-Installation guide can be found here: https://platformio.org/install/ide?install=vscode
+### PlatformIO
+PlatformIO is a cross-platform IDE extension for Visual Studio Code.
+Use PlatformIO to open, build and upload the example projects to the Unity board. 
+The installation guide can be found [here](https://platformio.org/install/ide?install=vs code).
 
 ### 1. [Blink](/Arduino%20Examples/Blink)
-This project blinks LEDs on all GPIO ports.
+This project will blink LEDs on all GPIO ports.
 
 ### 2. [Bluetooth Keyboard](/Arduino%20Examples/BluetoothKeyboard)
-This project will will connect as a Bluetooth keyboard and type a a few sentences.
+This project will simulate a Bluetooth keyboard and will type a few sentences when connected to a computer or mobile device. 
 
 ### Windows Setup
 1. Go to Settings -> Bluetooth & Devices -> Add device.
@@ -57,9 +60,9 @@ There are two ways to connect to your WiFi network:
 ## Connecting to WiFi Network
 There are two ways to connect to your WiFi network:
 
-### Using Imrpov (Easy)
+### Using Imrpov
 1. Power up the Unity board.
-1. Go to https://www.improv-wifi.com/ on your phone (or computer with bluetooth) and 
+1. Go to https://www.improv-wifi.com/ on your phone or a computer with Bluetooth.
 1. Click "Connect device to Wi-Fi".
 1. Select the Unity device.
 <p align="center">
@@ -69,7 +72,7 @@ There are two ways to connect to your WiFi network:
 5. Input your SSID and password.
 1. Click Save.
 
-### Using the Access Point (Medium)
+### Using the Access Point
 1. Power up the Unity board.
 1. On you phone or computer, search for the "Unity" WiFi network.
 1. Once connected, you will be redirected to WiFi setup page. If you are not redirected, open a browser and go to http://192.168.4.1
@@ -88,7 +91,7 @@ If you have the ESPHome Add-on already installed, then Home Assistant and the ES
   <img width="360" src="./images/EspHomeUnityDiscover.png">
 </p>
 
-Note: If you do not have the ESPHome Add-on then follow the Installing ESPHome Dashboard steps [here](https://esphome.io/guides/getting_started_hassio.html).
+If you do not have the ESPHome Add-on then follow the 'Installing ESPHome Dashboard' steps [here](https://esphome.io/guides/getting_started_hassio.html).
 
 The device will then appear in Settings -> Devices & Services.
 <p align="center">

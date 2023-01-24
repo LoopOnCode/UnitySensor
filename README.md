@@ -40,9 +40,9 @@ There are two ways to connect the Unity board to your WiFi network:
 
 ### Using the Access Point<!-- omit from toc -->
 1. Power up the Unity board.
-1. On you phone or computer, search for the "Unity" WiFi network.
-1. Once connected, you will be redirected to WiFi setup page. If you are not redirected, open a browser and go to http://192.168.4.1
-1. Select you WiFi network SSID and input the password if needed.
+1. On your phone or computer, search for the Unity WiFi network.
+1. Once connected, your phone will be redirected to the WiFi setup page. If you are not redirected, open a browser and go to http://192.168.4.1
+1. Select your WiFi network SSID from the list and input the password if needed.
 1. Click Save.
 <p align="center">
   <img src="./images/AndroidWiFiScan.png" width="25%" style="display:inline;">
@@ -131,7 +131,7 @@ This project will simulate a Bluetooth keyboard and will type a few sentences wh
 ### Windows Setup<!-- omit from toc -->
 1. Go to Settings -> Bluetooth & Devices -> Add device.
 1. Select Bluetooth.
-1. After the scan has completed, Unity Keyboard should appear. Click and add device.
+1. After the scan has completed, the 'Unity Keyboard' should appear. Click and add device.
 1. Open Notepad.exe and watch it type.
 
 ### Android Setup<!-- omit from toc -->

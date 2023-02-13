@@ -6,7 +6,7 @@ substitutions:
   device_name: Unity
   device_make_lower: loopon
   device_make: LoopOn
-  sw_version: "1.0.0"
+  sw_version: "1.1.0"
   hw_version: "1.0"
   bh1750_addr: "0x23" # Addr pad unsoldered=0x23 / soldered=0x5C
   ld2410_name: mmWave
@@ -145,6 +145,14 @@ binary_sensor:
     name: "${device_name} Button"
 
 sensor:
+  - platform: template
+    id: internal_temp
+    name: "${device_name} Internal Temperature"
+    icon: "mdi:thermometer"
+    unit_of_measurement: "°C"
+    entity_category: diagnostic
+    disabled_by_default: true
+    lambda: return temperatureRead();
   - platform: wifi_signal
     name: "${device_name} WiFi Signal"
     update_interval: 60s
@@ -152,18 +160,18 @@ sensor:
     temperature:
       name: "${device_name} Temperature"
       filters:
-        - lambda: "return x+id(temperature_offset).state;"
+        - lambda: "return x-((id(internal_temp).state-x)/2)+id(temperature_offset).state;"
     humidity:
       name: "${device_name} Humidity"
       filters:
         - lambda: "return x+id(humidity_offset).state;"
-    update_interval: 10s
+    update_interval: 60s
   - platform: bh1750
     name: "${device_name} Illuminance"
     address: ${bh1750_addr}
     filters:
       - lambda: "return x+id(illuminance_offset).state;"
-    update_interval: 10s
+    update_interval: 60s
   - platform: custom
     lambda: |-
       auto uart_ld2410 = static_cast<LD2410 *>(ld2410);
@@ -266,8 +274,8 @@ number:
     name: "${device_name} Temperature Offset"
     id: temperature_offset
     unit_of_measurement: "°C"
-    min_value: -5
-    max_value: 5
+    min_value: -30
+    max_value: 30
     step: 0.1
     mode: box
     update_interval: never
@@ -280,8 +288,8 @@ number:
     name: "${device_name} Humidity Offset"
     id: humidity_offset
     unit_of_measurement: "%"
-    min_value: -10
-    max_value: 10
+    min_value: -30
+    max_value: 30
     step: 0.1
     mode: box
     update_interval: never

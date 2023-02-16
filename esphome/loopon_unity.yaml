@@ -6,7 +6,7 @@ substitutions:
   device_name: Unity
   device_make_lower: loopon
   device_make: LoopOn
-  sw_version: "1.1.0"
+  sw_version: "1.2.0"
   hw_version: "1.0"
   bh1750_addr: "0x23" # Addr pad unsoldered=0x23 / soldered=0x5C
   ld2410_name: mmWave
@@ -15,7 +15,7 @@ esphome:
   name: "${device_name_lower}"
   comment: "${device_name} by ${device_make}"
   name_add_mac_suffix: true
-  min_version: "2022.12.3"
+  min_version: "2023.2.0"
   project:
     name: "${device_make}.${device_name}"
     version: "${hw_version}"
@@ -28,21 +28,15 @@ esphome:
     board_build.flash_size: 4MB
     build_flags: -DARDUINO_USB_MODE=1 -DARDUINO_USB_CDC_ON_BOOT=1 -DARDUINO_ESP32C3_DEV=1
     upload_speed: 115200
-  includes:
-    - ld2410_uart.h
   on_boot:
     priority: 600
     then:
-      - lambda: |-
-          auto uart_ld2410 = static_cast<LD2410 *>(ld2410);
-          uart_ld2410->setNumbers(distance_range_ld2410,none_duration_ld2410,sensitivity_threshold_ld2410);
+      - lambda: "ld2410_ld2410component->set_numbers(distance_range_ld2410,none_duration_ld2410,moving_sensitivity_threshold_ld2410,still_sensitivity_threshold_ld2410);"
       - script.execute: config_on_ld2410
       - delay: 50ms
-      - lambda: "static_cast<LD2410 *>(ld2410)->queryParameters();"
+      - script.execute: query_params_ld2410
       - delay: 50ms
-      - lambda: |-
-          auto uart_ld2410 = static_cast<LD2410 *>(ld2410);
-          uart_ld2410->setAllSensitivity(id(sensitivity_threshold_ld2410).state);
+      - script.execute: set_thresholds_ld2410
       - delay: 50ms
       - script.execute: config_off_ld2410
 
@@ -57,6 +51,12 @@ esp32:
 dashboard_import:
   package_import_url: github://LoopOnCode/UnitySensor/esphome/loopon_unity.yaml@main
   import_full_config: true
+
+external_components:
+  - source: github://LoopOnCode/UnitySensor/esphome@main
+    components: [ ld2410 ]
+
+ld2410:
 
 logger:
   baud_rate: 0 # LD2410 config issues when logger is enabled
@@ -80,12 +80,6 @@ uart:
   baud_rate: 256000
   parity: NONE
   stop_bits: 1
-
-custom_component:
-  - lambda: |-
-      return {new LD2410(id(uart1))};
-    components:
-      - id: ld2410
 
 esp32_improv:
   authorizer: none
@@ -119,20 +113,13 @@ text_sensor:
       icon: "mdi:wan"
 
 binary_sensor:
-  - platform: custom
-    lambda: |-
-      auto uart_ld2410 = static_cast<LD2410 *>(ld2410);
-      return {uart_ld2410->hasTarget,uart_ld2410->hasMovingTarget,uart_ld2410->hasStillTarget,uart_ld2410->lastCommandSuccess};
-    binary_sensors:
-      - name: "${device_name} Has Human Target"
-        device_class: motion
-        icon: "mdi:motion-sensor"
-      - name: "${device_name} Has Moving Human Target"
-        device_class: motion
-        icon: "mdi:motion-sensor"
-      - name: "${device_name} Has Still Human Target"
-        device_class: motion
-        icon: "mdi:motion-sensor"
+  - platform: ld2410
+    has_target:
+      name: "${device_name} Has Human Target"
+    has_moving_target:
+      name: "${device_name} Has Moving Human Target"
+    has_still_target:
+      name: "${device_name} Has Still Human Target"
   - platform: gpio
     id: boot_button
     icon: "mdi:button-pointer"
@@ -172,36 +159,22 @@ sensor:
     filters:
       - lambda: "return x+id(illuminance_offset).state;"
     update_interval: 60s
-  - platform: custom
-    lambda: |-
-      auto uart_ld2410 = static_cast<LD2410 *>(ld2410);
-      return {uart_ld2410->movingTargetDistance,uart_ld2410->movingTargetEnergy,uart_ld2410->stillTargetDistance,uart_ld2410->stillTargetEnergy,uart_ld2410->detectDistance};
-    sensors:
-      - name: "${device_name} Moving Human Target Distance"
-        id: moving_target_distance_ld2410
-        unit_of_measurement: "cm"
-        accuracy_decimals: 0
-        icon: "mdi:arrow-left-right"
-      - name: "${device_name} Moving Human Target Energy"
-        id: moving_target_energy_ld2410
-        unit_of_measurement: "%"
-        accuracy_decimals: 0
-        icon: "mdi:lightning-bolt"
-      - name: "${device_name} Still Human Target Distance"
-        id: still_target_distance_ld2410
-        unit_of_measurement: "cm"
-        accuracy_decimals: 0
-        icon: "mdi:arrow-left-right"
-      - name: "${device_name} Still Human Target Energy"
-        id: still_target_energy_ld2410
-        unit_of_measurement: "%"
-        accuracy_decimals: 0
-        icon: "mdi:lightning-bolt"
-      - name: "${device_name} Human Detect Distance"
-        id: detect_distance_ld2410
-        unit_of_measurement: "cm"
-        accuracy_decimals: 0
-        icon: "mdi:arrow-left-right"
+  - platform: ld2410
+    moving_distance:
+      name : "${device_name} Moving Human Distance"
+      id: moving_target_distance_ld2410
+    still_distance:
+      name: "${device_name} Still Human Distance"
+      id: still_target_distance_ld2410
+    moving_energy:
+      name: "${device_name} Moving Human Energy"
+      id: moving_target_energy_ld2410
+    still_energy:
+      name: "${device_name} Still Human Energy"
+      id: still_target_energy_ld2410
+    detection_distance:
+      name: "${device_name} Human Detection Distance"
+      id: target_detect_distance_ld2410
 
 number:
   - platform: template
@@ -219,11 +192,9 @@ number:
     set_action:
       - script.execute: config_on_ld2410
       - delay: 50ms
-      - lambda: |-
-          auto uart_ld2410 = static_cast<LD2410 *>(ld2410);
-          uart_ld2410->setMaxDistancesAndNoneDuration(x/0.75,id(none_duration_ld2410).state);
+      - lambda: "ld2410_ld2410component->set_max_distances_timeout(x/0.75,id(none_duration_ld2410).state);"
       - delay: 50ms
-      - lambda: "static_cast<LD2410 *>(ld2410)->queryParameters();"
+      - script.execute: query_params_ld2410
       - delay: 50ms
       - script.execute: config_off_ld2410
   - platform: template
@@ -241,16 +212,14 @@ number:
     set_action:
       - script.execute: config_on_ld2410
       - delay: 50ms
-      - lambda: |-
-          auto uart_ld2410 = static_cast<LD2410 *>(ld2410);
-          uart_ld2410->setMaxDistancesAndNoneDuration(id(distance_range_ld2410).state/0.75,x);
+      - lambda: "ld2410_ld2410component->set_max_distances_timeout(id(distance_range_ld2410).state/0.75,x);"
       - delay: 50ms
-      - lambda: "static_cast<LD2410 *>(ld2410)->queryParameters();"
+      - script.execute: query_params_ld2410
       - delay: 50ms
       - script.execute: config_off_ld2410
   - platform: template
-    name: "${device_name} Human Sensitivity Threshold"
-    id: sensitivity_threshold_ld2410
+    name: "${device_name} Moving Human Sensitivity Threshold"
+    id: moving_sensitivity_threshold_ld2410
     unit_of_measurement: "%"
     icon: "mdi:car-cruise-control"
     min_value: 0
@@ -263,11 +232,29 @@ number:
     set_action:
       - script.execute: config_on_ld2410
       - delay: 50ms
-      - lambda: |-
-          auto uart_ld2410 = static_cast<LD2410 *>(ld2410);
-          uart_ld2410->setAllSensitivity(x);
+      - lambda: "ld2410_ld2410component->set_thresholds(x,id(still_sensitivity_threshold_ld2410).state);"
       - delay: 50ms
-      - lambda: "static_cast<LD2410 *>(ld2410)->queryParameters();"
+      - script.execute: query_params_ld2410
+      - delay: 50ms
+      - script.execute: config_off_ld2410
+  - platform: template
+    name: "${device_name} Still Human Sensitivity Threshold"
+    id: still_sensitivity_threshold_ld2410
+    unit_of_measurement: "%"
+    icon: "mdi:car-cruise-control"
+    min_value: 0
+    max_value: 100
+    step: 1
+    mode: box
+    update_interval: never
+    optimistic: true
+    entity_category: config
+    set_action:
+      - script.execute: config_on_ld2410
+      - delay: 50ms
+      - lambda: "ld2410_ld2410component->set_thresholds(id(moving_sensitivity_threshold_ld2410).state,x);"
+      - delay: 50ms
+      - script.execute: query_params_ld2410
       - delay: 50ms
       - script.execute: config_off_ld2410
   - platform: template
@@ -337,45 +324,46 @@ button:
 script:
   - id: config_on_ld2410
     then:
-      - lambda: "static_cast<LD2410 *>(ld2410)->setConfigMode(true);"
+      - lambda: "ld2410_ld2410component->set_config_mode(true);"
       - delay: 50ms
       - script.execute: clear_targets_ld2410
   - id: config_off_ld2410
     then:
-      - lambda: "static_cast<LD2410 *>(ld2410)->setConfigMode(false);"
+      - lambda: "ld2410_ld2410component->set_config_mode(false);"
+  - id: query_params_ld2410
+    then:
+      - lambda: "ld2410_ld2410component->query_parameters();"
   - id: get_config_ld2410
     then:
       - script.execute: config_on_ld2410
       - delay: 50ms
-      - lambda: "static_cast<LD2410 *>(ld2410)->queryParameters();"
+      - script.execute: query_params_ld2410
       - delay: 50ms
       - script.execute: config_off_ld2410
-  - id: factory_reset_ld2410
+  - id: set_thresholds_ld2410
     then:
-      - script.execute: config_on_ld2410
-      - delay: 50ms
-      - script.execute: clear_targets_ld2410
-      - delay: 50ms
-      - lambda: "static_cast<LD2410 *>(ld2410)->factoryReset();"
-      - delay: 150ms
-      - lambda: "static_cast<LD2410 *>(ld2410)->reboot();"
-      - delay: 500ms
-      - script.execute: config_on_ld2410
-      - delay: 50ms
-      - lambda: "static_cast<LD2410 *>(ld2410)->queryParameters();"
-      - delay: 50ms
-      - lambda: |-
-          auto uart_ld2410 = static_cast<LD2410 *>(ld2410);
-          uart_ld2410->setAllSensitivity(id(sensitivity_threshold_ld2410).state);
-      - delay: 50ms
-      - script.execute: config_off_ld2410
+      - lambda: "ld2410_ld2410component->set_thresholds(id(moving_sensitivity_threshold_ld2410).state,id(still_sensitivity_threshold_ld2410).state);"
   - id: reboot_ld2410
     then:
       - script.execute: clear_targets_ld2410
-      - delay: 50ms
-      - lambda: "static_cast<LD2410 *>(ld2410)->reboot();"
+      - lambda: "ld2410_ld2410component->reboot();"
       - delay: 500ms
       - script.execute: get_config_ld2410
+  - id: factory_reset_ld2410
+    then:
+    - script.execute: config_on_ld2410
+    - delay: 100ms
+    - lambda: "ld2410_ld2410component->factory_reset();"
+    - delay: 150ms
+    - lambda: "ld2410_ld2410component->reboot();"
+    - delay: 500ms
+    - script.execute: config_on_ld2410
+    - delay: 50ms
+    - script.execute: query_params_ld2410
+    - delay: 50ms
+    - script.execute: set_thresholds_ld2410
+    - delay: 50ms
+    - script.execute: config_off_ld2410
   - id: clear_targets_ld2410
     then:
       - lambda: |-
@@ -383,4 +371,4 @@ script:
           id(moving_target_energy_ld2410).publish_state(0);
           id(still_target_distance_ld2410).publish_state(0);
           id(still_target_energy_ld2410).publish_state(0);
-          id(detect_distance_ld2410).publish_state(0);
+          id(target_detect_distance_ld2410).publish_state(0);

@@ -2,9 +2,8 @@
 ## https://loopon.tech/products/unity-sensor
 
 substitutions:
-  device_name_lower: unity
+  name: unity
   device_name: Unity
-  device_make_lower: loopon
   device_make: LoopOn
   sw_version: "1.2.0"
   hw_version: "1.0"
@@ -12,7 +11,7 @@ substitutions:
   ld2410_name: mmWave
 
 esphome:
-  name: "${device_name_lower}"
+  name: "${name}"
   comment: "${device_name} by ${device_make}"
   name_add_mac_suffix: true
   min_version: "2023.2.0"
@@ -50,7 +49,7 @@ esp32:
 
 dashboard_import:
   package_import_url: github://LoopOnCode/UnitySensor/esphome/loopon_unity.yaml@main
-  import_full_config: true
+  import_full_config: false
 
 external_components:
   - source: github://LoopOnCode/UnitySensor@main
@@ -268,7 +267,7 @@ number:
     update_interval: never
     optimistic: true
     restore_value: true
-    initial_value: 0
+    initial_value: -3
     icon: "mdi:thermometer"
     entity_category: config
   - platform: template

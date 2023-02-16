@@ -9,6 +9,7 @@
 
 ClosedCube_HDC1080 hdc1080;
 BH1750 lightMeter(0x23); // Unsoldered: 0x23 / Soldered: 0x5C
+float tempOffset = -7;
 
 void setup()
 {
@@ -21,10 +22,17 @@ void setup()
   lightMeter.begin(BH1750::CONTINUOUS_HIGH_RES_MODE);
 }
 
+float calcTemp()
+{
+  float internalTemp = temperatureRead();
+  float externalTemp = hdc1080.readTemperature();
+  return externalTemp - (abs(internalTemp - externalTemp) / 2.0) + tempOffset;
+}
+
 void loop()
 {
   Serial.print("Temperature: ");
-  Serial.print(hdc1080.readTemperature());
+  Serial.print(calcTemp());
   Serial.print("°C, Relative Humidity: ");
   Serial.print(hdc1080.readHumidity());
   Serial.print("%, Light: ");

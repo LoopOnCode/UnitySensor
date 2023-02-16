@@ -53,7 +53,7 @@ dashboard_import:
   import_full_config: true
 
 external_components:
-  - source: github://LoopOnCode/UnitySensor/esphome@main
+  - source: github://LoopOnCode/UnitySensor@main
     components: [ ld2410 ]
 
 ld2410:

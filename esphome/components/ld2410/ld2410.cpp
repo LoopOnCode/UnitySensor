@@ -328,6 +328,17 @@ namespace esphome
                            0x01, 0x00, lowbyte(moving_sens), highbyte(moving_sens), 0x00, 0x00,
                            0x02, 0x00, lowbyte(still_sens), highbyte(still_sens), 0x00, 0x00};
       this->send_command_(CMD_GATE_SENS, value, 18);
+
+      // Overrides for gates 0-1 to counter excessive fluctuations in the sensor
+      int max_gate_value = 100;
+      int moving_gate_value_additions[2] = {20, 20};
+      for (int i = 0; i < 2; i++){
+        int moving_gate_value = std::min(moving_sens + moving_gate_value_additions[i], max_gate_value);
+        uint8_t override_value[18] = {0x00, 0x00, lowbyte(i), highbyte(i), 0x00, 0x00,
+                     0x01, 0x00, lowbyte(moving_gate_value), highbyte(moving_gate_value), 0x00, 0x00,
+                     0x02, 0x00, lowbyte(still_sens),  highbyte(still_sens),  0x00, 0x00};    
+        this->send_command_(CMD_GATE_SENS, override_value, 18);
+      }
     }
 
     void LD2410Component::factory_reset() { this->send_command_(CMD_FACTORY_RESET, nullptr, 0); }

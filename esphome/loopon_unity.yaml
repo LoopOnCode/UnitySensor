@@ -6,7 +6,7 @@ substitutions:
   device_name: Unity
   device_make: LoopOn
   sw_version: "1.2.2"
-  hw_version: "1.0"
+  hw_version: "1.0.1"
   bh1750_addr: "0x23" # Addr pad unsoldered=0x23 / soldered=0x5C
   ld2410_name: mmWave
 

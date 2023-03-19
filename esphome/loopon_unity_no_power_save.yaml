@@ -48,7 +48,7 @@ esp32:
     platform_version: 6.0.0
 
 dashboard_import:
-  package_import_url: github://LoopOnCode/UnitySensor/esphome/loopon_unity.yaml@main
+  package_import_url: github://LoopOnCode/UnitySensor/esphome/loopon_unity_no_power_save.yaml@main
   import_full_config: false
 
 external_components:
@@ -67,6 +67,7 @@ ota:
 wifi:
   fast_connect: false
   output_power: 15
+  power_save_mode: none
   ap:
     ap_timeout: "15s"
 
@@ -79,9 +80,6 @@ uart:
   baud_rate: 256000
   parity: NONE
   stop_bits: 1
-
-esp32_improv:
-  authorizer: none
 
 i2c:
   sda: GPIO5

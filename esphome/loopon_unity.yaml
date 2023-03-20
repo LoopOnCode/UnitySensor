@@ -5,8 +5,7 @@ substitutions:
   name: unity
   device_name: Unity
   device_make: LoopOn
-  sw_version: "1.2.3"
-  hw_version: "1.0.1"
+  sw_version: "1.2.4"
   bh1750_addr: "0x23" # Addr pad unsoldered=0x23 / soldered=0x5C
   ld2410_name: mmWave
 
@@ -17,7 +16,7 @@ esphome:
   min_version: "2023.2.0"
   project:
     name: "${device_make}.${device_name}"
-    version: "${hw_version}"
+    version: "${sw_version}"
   platformio_options:
     board_build.mcu: esp32c3
     board_build.variant: esp32c3
@@ -30,6 +29,7 @@ esphome:
   on_boot:
     priority: 600
     then:
+      - delay: 150ms
       - lambda: "ld2410_ld2410component->set_numbers(distance_range_ld2410,none_duration_ld2410,moving_sensitivity_threshold_ld2410,still_sensitivity_threshold_ld2410);"
       - script.execute: config_on_ld2410
       - delay: 50ms

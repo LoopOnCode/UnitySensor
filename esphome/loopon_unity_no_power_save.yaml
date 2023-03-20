@@ -5,7 +5,7 @@ substitutions:
   name: unity
   device_name: Unity
   device_make: LoopOn
-  sw_version: "1.2.4"
+  sw_version: "1.2.5"
   bh1750_addr: "0x23" # Addr pad unsoldered=0x23 / soldered=0x5C
   ld2410_name: mmWave
 
@@ -29,7 +29,7 @@ esphome:
   on_boot:
     priority: 600
     then:
-      - delay: 150ms
+      - delay: 300ms
       - lambda: "ld2410_ld2410component->set_numbers(distance_range_ld2410,none_duration_ld2410,moving_sensitivity_threshold_ld2410,still_sensitivity_threshold_ld2410);"
       - script.execute: config_on_ld2410
       - delay: 50ms

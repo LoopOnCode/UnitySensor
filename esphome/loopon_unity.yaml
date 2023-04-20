@@ -73,7 +73,7 @@ wifi:
 captive_portal:
 
 uart:
-  id: uart1
+  id: ld2410_uart
   tx_pin: GPIO21
   rx_pin: GPIO20
   baud_rate: 256000

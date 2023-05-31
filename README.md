@@ -21,7 +21,7 @@ Specifications of the board can be found at https://loopon.tech/products/unity-s
     - [6. WiFi Scanning](#6-wifi-scanning)
 
 # Getting Started
-The Unity board comes pre-installed with ESPHome. The configuration can be found [here](/ESPHome/loopon_unity.yaml).
+The Unity board comes pre-installed with ESPHome. The configuration can be found [here](./esphome/loopon_unity.yaml).
 
 ## Connecting to WiFi
 There are two ways to connect the Unity board to your WiFi network:
@@ -83,22 +83,26 @@ For best results, use the recommended settings in the screenshot below for the h
 ## Modifying ESPHome Config
 You can modify the way the device behaves by compiling and flashing the Unity board.
 
-### Using ESPHome Dashboard (Easy)<!-- omit from toc -->
-*(Work in progress)*
+### Using ESPHome Dashboard in Home Assistant (Easy)<!-- omit from toc -->
+1. Go to the ESPHome dashboard in Home Assistant.
+2. Select the device you would like to modify and click "Edit".
+3. Make your changes in the yaml and click "Install".
+4. Select "Wirelessly" from the pop-up.
+5. ESPHome will now compile the latest yaml and install it on the device. This will take a few minutes.
 
 ### Using ESPHome CLI (Medium)<!-- omit from toc -->
-With ESPHome installed on your computer ([guide](https://esphome.io/guides/installing_esphome.html)), you can clone and modify the [loopon_unity.yaml](./ESPHome/loopon_unity.yaml), compile and flash the Unity board.
+With ESPHome installed on your computer ([guide](https://esphome.io/guides/installing_esphome.html)), you can clone and modify the [loopon_unity.yaml](./esphome/loopon_unity.yaml), compile and flash the Unity board.
 
 To compile and flash use:
 ```sh
 # Make sure Unity board is in Flash mode
-esphome run ./ESPHome/loopon_unity.yaml --no-logs
+esphome run ./esphome/loopon_unity.yaml --no-logs
 # Reset device when done
 ```
 
 To monitor logs use:
 ```sh
-esphome logs ./ESPHome/loopon_unity.yaml --device=COM19 
+esphome logs ./esphome/loopon_unity.yaml 
 ```
 
 You can optionally add the device port to the commands above:

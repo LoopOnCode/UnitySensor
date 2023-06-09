@@ -6,6 +6,12 @@ Specifications of the board can be found at https://loopon.tech/products/unity-s
   <img width="260" src="./images/UnityBoard.JPG">
 </p>
 
+
+> <img width="50" align="right" src="./images/esdWarning.png" style="margin: 5px; display: block;">
+
+&#x26a0;&#xfe0f; **Caution**: Some electronic components are highly sensitive to Electrostatic Discharge and are damaged easily by this. Avoid direct contact with sensors, LED and the ESP
+
+
 # Table of Contents<!-- omit from toc -->
 - [Getting Started](#getting-started)
   - [Connecting to WiFi](#connecting-to-wifi)

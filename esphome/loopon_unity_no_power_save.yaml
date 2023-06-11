@@ -5,7 +5,7 @@ substitutions:
   name: unity
   device_name: Unity
   device_make: LoopOn
-  sw_version: "1.2.6"
+  sw_version: "1.2.7"
   bh1750_addr: "0x23" # Addr pad unsoldered=0x23 / soldered=0x5C
   ld2410_name: mmWave
 
@@ -311,12 +311,14 @@ button:
     name: "${device_name} Factory Reset ${ld2410_name}"
     icon: "mdi:restart-alert"
     entity_category: config
+    disabled_by_default: true
     on_press:
       - script.execute: factory_reset_ld2410
   - platform: factory_reset
     name: ${device_name} Factory Reset
     icon: "mdi:restart-alert"
     entity_category: config
+    disabled_by_default: true
 
 script:
   - id: config_on_ld2410

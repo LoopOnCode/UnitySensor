@@ -105,7 +105,7 @@ You can modify the way the device behaves by compiling and flashing the Unity bo
 1. Clone this repo: 
 ```git clone https://github.com/LoopOnCode/UnitySensor``` or download and extract the zip.
 1.  Make your changes to [loopon_unity.yaml](./esphome/loopon_unity.yaml).
-1.  Put the device into flash mode. See [here](#flashing-the-airsense-board).
+1.  Put the device into flash mode. See [here](#flashing-the-unity-board).
 1.  Compile and flash:
 ```esphome run ./UnitySensor/esphome/loopon_unity.yaml --no-logs```
 1.  Reset the device

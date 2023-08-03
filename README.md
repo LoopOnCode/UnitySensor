@@ -108,7 +108,7 @@ You can modify the way the device behaves by compiling and flashing the Unity bo
 1.  Put the device into flash mode. See [here](#flashing-the-unity-board).
 1.  Compile and flash:
 ```esphome run ./UnitySensor/esphome/loopon_unity.yaml --no-logs```
-1.  Reset the device
+1.  Reset the device.
 
 # Flashing the Unity Board
 To flash the Unity board, it must be put in the correct boot mode.

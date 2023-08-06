@@ -5,7 +5,7 @@ substitutions:
   name: unity
   device_name: Unity
   device_make: LoopOn
-  sw_version: "1.2.8"
+  sw_version: "1.2.9"
   bh1750_addr: "0x23" # Addr pad unsoldered=0x23 / soldered=0x5C
   ld2410_name: mmWave
 
@@ -29,7 +29,18 @@ esphome:
   on_boot:
     priority: 600
     then:
-      - delay: 300ms
+      - light.turn_on:
+          id: rgb_light
+          effect: Boot Sequence
+          red: 100%
+          green: 100%
+          blue: 100%
+      - delay: 2000ms
+      - light.turn_on:
+          id: rgb_light
+          effect: none
+      - light.turn_off:
+          id: rgb_light
       - lambda: "ld2410_ld2410component->set_numbers(distance_range_ld2410,none_duration_ld2410,moving_sensitivity_threshold_ld2410,still_sensitivity_threshold_ld2410);"
       - script.execute: config_on_ld2410
       - delay: 50ms
@@ -95,6 +106,11 @@ light:
     name: "${device_name} Light"
     gamma_correct: 0
     restore_mode: RESTORE_DEFAULT_OFF
+    effects:
+      - addressable_rainbow:
+          name: Boot Sequence
+          speed: 50
+          width: 1
 
 text_sensor:
   - platform: template

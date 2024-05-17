@@ -5,7 +5,7 @@ substitutions:
   name: unity
   device_name: Unity
   device_make: LoopOn
-  sw_version: "1.2.11"
+  sw_version: "1.2.12"
   bh1750_addr: "0x23" # Addr pad unsoldered=0x23 / soldered=0x5C
   ld2410_name: mmWave
 
@@ -13,7 +13,7 @@ esphome:
   name: "${name}"
   comment: "${device_name} by ${device_make}"
   name_add_mac_suffix: true
-  min_version: "2023.2.0"
+  min_version: "2024.5.0"
   project:
     name: "${device_make}.${device_name}"
     version: "${sw_version}"
@@ -41,7 +41,7 @@ esphome:
           effect: none
       - light.turn_off:
           id: rgb_light
-      - lambda: "ld2410_ld2410component->set_numbers(distance_range_ld2410,none_duration_ld2410,moving_sensitivity_threshold_ld2410,still_sensitivity_threshold_ld2410);"
+      - lambda: "ld2410_ld2410component_id->set_numbers(distance_range_ld2410,none_duration_ld2410,moving_sensitivity_threshold_ld2410,still_sensitivity_threshold_ld2410);"
       - script.execute: config_on_ld2410
       - delay: 50ms
       - script.execute: query_params_ld2410
@@ -205,7 +205,7 @@ number:
     set_action:
       - script.execute: config_on_ld2410
       - delay: 50ms
-      - lambda: "ld2410_ld2410component->set_max_distances_timeout(x/0.75,id(none_duration_ld2410).state);"
+      - lambda: "ld2410_ld2410component_id->set_max_distances_timeout(x/0.75,id(none_duration_ld2410).state);"
       - delay: 50ms
       - script.execute: query_params_ld2410
       - delay: 50ms
@@ -225,7 +225,7 @@ number:
     set_action:
       - script.execute: config_on_ld2410
       - delay: 50ms
-      - lambda: "ld2410_ld2410component->set_max_distances_timeout(id(distance_range_ld2410).state/0.75,x);"
+      - lambda: "ld2410_ld2410component_id->set_max_distances_timeout(id(distance_range_ld2410).state/0.75,x);"
       - delay: 50ms
       - script.execute: query_params_ld2410
       - delay: 50ms
@@ -245,7 +245,7 @@ number:
     set_action:
       - script.execute: config_on_ld2410
       - delay: 50ms
-      - lambda: "ld2410_ld2410component->set_thresholds(x,id(still_sensitivity_threshold_ld2410).state);"
+      - lambda: "ld2410_ld2410component_id->set_thresholds(x,id(still_sensitivity_threshold_ld2410).state);"
       - delay: 50ms
       - script.execute: query_params_ld2410
       - delay: 50ms
@@ -265,7 +265,7 @@ number:
     set_action:
       - script.execute: config_on_ld2410
       - delay: 50ms
-      - lambda: "ld2410_ld2410component->set_thresholds(id(moving_sensitivity_threshold_ld2410).state,x);"
+      - lambda: "ld2410_ld2410component_id->set_thresholds(id(moving_sensitivity_threshold_ld2410).state,x);"
       - delay: 50ms
       - script.execute: query_params_ld2410
       - delay: 50ms
@@ -339,15 +339,15 @@ button:
 script:
   - id: config_on_ld2410
     then:
-      - lambda: "ld2410_ld2410component->set_config_mode(true);"
+      - lambda: "ld2410_ld2410component_id->set_config_mode(true);"
       - delay: 50ms
       - script.execute: clear_targets_ld2410
   - id: config_off_ld2410
     then:
-      - lambda: "ld2410_ld2410component->set_config_mode(false);"
+      - lambda: "ld2410_ld2410component_id->set_config_mode(false);"
   - id: query_params_ld2410
     then:
-      - lambda: "ld2410_ld2410component->query_parameters();"
+      - lambda: "ld2410_ld2410component_id->query_parameters();"
   - id: get_config_ld2410
     then:
       - script.execute: config_on_ld2410
@@ -357,20 +357,20 @@ script:
       - script.execute: config_off_ld2410
   - id: set_thresholds_ld2410
     then:
-      - lambda: "ld2410_ld2410component->set_thresholds(id(moving_sensitivity_threshold_ld2410).state,id(still_sensitivity_threshold_ld2410).state);"
+      - lambda: "ld2410_ld2410component_id->set_thresholds(id(moving_sensitivity_threshold_ld2410).state,id(still_sensitivity_threshold_ld2410).state);"
   - id: reboot_ld2410
     then:
       - script.execute: clear_targets_ld2410
-      - lambda: "ld2410_ld2410component->reboot();"
+      - lambda: "ld2410_ld2410component_id->reboot();"
       - delay: 500ms
       - script.execute: get_config_ld2410
   - id: factory_reset_ld2410
     then:
     - script.execute: config_on_ld2410
     - delay: 100ms
-    - lambda: "ld2410_ld2410component->factory_reset();"
+    - lambda: "ld2410_ld2410component_id->factory_reset();"
     - delay: 150ms
-    - lambda: "ld2410_ld2410component->reboot();"
+    - lambda: "ld2410_ld2410component_id->reboot();"
     - delay: 500ms
     - script.execute: config_on_ld2410
     - delay: 50ms

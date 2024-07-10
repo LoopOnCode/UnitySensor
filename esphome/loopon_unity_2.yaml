@@ -1,0 +1,397 @@
+## Unity by LoopOn
+## https://loopon.tech/products/unity-sensor
+
+substitutions:
+  name: unity
+  device_name: Unity
+  device_make: LoopOn
+  sw_version: "2.0.0"
+  bh1750_addr: "0x23" # Addr pad unsoldered=0x23 / soldered=0x5C
+  ld2410_name: mmWave
+
+esphome:
+  name: "${name}"
+  friendly_name: "${device_name}"
+  comment: "${device_name} by ${device_make}"
+  name_add_mac_suffix: true
+  min_version: "2024.6.1"
+  project:
+    name: "${device_make}.${device_name}"
+    version: "${sw_version}"
+  platformio_options:
+    board_build.mcu: esp32c3
+    board_build.variant: esp32c3
+    board_build.flash_mode: dio
+    board_build.f_cpu: 160000000L
+    board_build.f_flash: 80000000L
+    board_build.flash_size: 4MB
+    build_flags: -DARDUINO_USB_MODE=1 -DARDUINO_USB_CDC_ON_BOOT=1 -DARDUINO_ESP32C3_DEV=1
+    upload_speed: 115200
+  on_boot:
+    priority: 600
+    then:
+      - light.turn_on:
+          id: rgb_light
+          effect: Boot Sequence
+          red: 100%
+          green: 100%
+          blue: 100%
+      - delay: 2000ms
+      - light.turn_on:
+          id: rgb_light
+          effect: none
+      - light.turn_off:
+          id: rgb_light
+      - lambda: "ld2410_ld2410component_id->set_numbers(distance_range_ld2410,none_duration_ld2410,moving_sensitivity_threshold_ld2410,still_sensitivity_threshold_ld2410);"
+      - script.execute: config_on_ld2410
+      - delay: 50ms
+      - script.execute: query_params_ld2410
+      - delay: 50ms
+      - script.execute: set_thresholds_ld2410
+      - delay: 50ms
+      - script.execute: config_off_ld2410
+
+esp32:
+  board: esp32-c3-devkitm-1
+  variant: esp32c3
+  framework:
+    type: arduino
+
+dashboard_import:
+  package_import_url: github://LoopOnCode/UnitySensor/esphome/loopon_unity_2.yaml@main
+  import_full_config: false
+
+external_components:
+  - source: github://LoopOnCode/UnitySensor@main
+    components: [ ld2410 ]
+
+ld2410:
+
+logger:
+
+api:
+
+ota:
+  platform: esphome
+
+wifi:
+  fast_connect: false
+  output_power: 15
+  ap:
+
+captive_portal:
+
+uart:
+  id: ld2410_uart
+  tx_pin: GPIO21
+  rx_pin: GPIO20
+  baud_rate: 256000
+  parity: NONE
+  stop_bits: 1
+
+esp32_improv:
+  authorizer: none
+
+improv_serial:
+
+i2c:
+  sda: GPIO5
+  scl: GPIO6
+  scan: false
+
+light:
+  - platform: neopixelbus
+    id: rgb_light
+    type: GRB
+    variant: WS2812
+    pin: GPIO2
+    num_leds: 1
+    name: "Light"
+    gamma_correct: 0
+    restore_mode: RESTORE_DEFAULT_OFF
+    effects:
+      - addressable_rainbow:
+          name: Boot Sequence
+          speed: 50
+          width: 1
+
+text_sensor:
+  - platform: template
+    name: "Config Version"
+    lambda: return {"${sw_version}"};
+    icon: "mdi:tag"
+    entity_category: diagnostic
+  - platform: wifi_info
+    ip_address:
+      id: ip_address
+      name: "IP Address"
+      icon: "mdi:wan"
+
+binary_sensor:
+  - platform: ld2410
+    has_target:
+      name: "Has Human Target"
+    has_moving_target:
+      name: "Has Moving Human Target"
+    has_still_target:
+      name: "Has Still Human Target"
+  - platform: gpio
+    id: boot_button
+    icon: "mdi:button-pointer"
+    pin:
+      number: GPIO9
+      inverted: true
+      mode:
+        input: true
+        pullup: true
+    name: "Button"
+
+sensor:
+  - platform: template
+    id: internal_temp
+    name: "Internal Temperature"
+    icon: "mdi:thermometer"
+    unit_of_measurement: "°C"
+    entity_category: diagnostic
+    disabled_by_default: true
+    lambda: return temperatureRead();
+  - platform: wifi_signal
+    name: "WiFi Signal"
+    update_interval: 60s
+  - platform: hdc1080
+    temperature:
+      name: "Temperature"
+      filters:
+        - skip_initial: 3
+        - median:
+            window_size: 5
+            send_every: 5
+            send_first_at: 1
+        - lambda: "return x+id(temperature_offset).state;"
+    humidity:
+      name: "Humidity"
+      filters:
+        - median
+        - lambda: "return x+id(humidity_offset).state;"
+    update_interval: 12s
+  - platform: bh1750
+    name: "Illuminance"
+    address: ${bh1750_addr}
+    filters:
+      - lambda: "return x+id(illuminance_offset).state;"
+    update_interval: 60s
+  - platform: ld2410
+    moving_distance:
+      name : "${device_name} Moving Human Distance"
+      id: moving_target_distance_ld2410
+    still_distance:
+      name: "Still Human Distance"
+      id: still_target_distance_ld2410
+    moving_energy:
+      name: "Moving Human Energy"
+      id: moving_target_energy_ld2410
+    still_energy:
+      name: "Still Human Energy"
+      id: still_target_energy_ld2410
+    detection_distance:
+      name: "Human Detection Distance"
+      id: target_detect_distance_ld2410
+
+number:
+  - platform: template
+    name: "Human Distance Range"
+    id: distance_range_ld2410
+    unit_of_measurement: "m"
+    icon: "mdi:arrow-left-right"
+    min_value: 0.75
+    max_value: 6
+    step: 0.75
+    mode: box
+    update_interval: never
+    optimistic: true
+    entity_category: config
+    set_action:
+      - script.execute: config_on_ld2410
+      - delay: 50ms
+      - lambda: "ld2410_ld2410component_id->set_max_distances_timeout(x/0.75,id(none_duration_ld2410).state);"
+      - delay: 50ms
+      - script.execute: query_params_ld2410
+      - delay: 50ms
+      - script.execute: config_off_ld2410
+  - platform: template
+    name: "Human Clear Delay"
+    id: none_duration_ld2410
+    unit_of_measurement: "s"
+    icon: "mdi:timer"
+    min_value: 0
+    max_value: 900
+    step: 1
+    mode: box
+    update_interval: never
+    optimistic: true
+    entity_category: config
+    set_action:
+      - script.execute: config_on_ld2410
+      - delay: 50ms
+      - lambda: "ld2410_ld2410component_id->set_max_distances_timeout(id(distance_range_ld2410).state/0.75,x);"
+      - delay: 50ms
+      - script.execute: query_params_ld2410
+      - delay: 50ms
+      - script.execute: config_off_ld2410
+  - platform: template
+    name: "Moving Human Sensitivity Threshold"
+    id: moving_sensitivity_threshold_ld2410
+    unit_of_measurement: "%"
+    icon: "mdi:car-cruise-control"
+    min_value: 0
+    max_value: 100
+    step: 1
+    mode: box
+    update_interval: never
+    optimistic: true
+    entity_category: config
+    set_action:
+      - script.execute: config_on_ld2410
+      - delay: 50ms
+      - lambda: "ld2410_ld2410component_id->set_thresholds(x,id(still_sensitivity_threshold_ld2410).state);"
+      - delay: 50ms
+      - script.execute: query_params_ld2410
+      - delay: 50ms
+      - script.execute: config_off_ld2410
+  - platform: template
+    name: "Still Human Sensitivity Threshold"
+    id: still_sensitivity_threshold_ld2410
+    unit_of_measurement: "%"
+    icon: "mdi:car-cruise-control"
+    min_value: 0
+    max_value: 100
+    step: 1
+    mode: box
+    update_interval: never
+    optimistic: true
+    entity_category: config
+    set_action:
+      - script.execute: config_on_ld2410
+      - delay: 50ms
+      - lambda: "ld2410_ld2410component_id->set_thresholds(id(moving_sensitivity_threshold_ld2410).state,x);"
+      - delay: 50ms
+      - script.execute: query_params_ld2410
+      - delay: 50ms
+      - script.execute: config_off_ld2410
+  - platform: template
+    name: "Temperature Offset"
+    id: temperature_offset
+    unit_of_measurement: "°C"
+    min_value: -50
+    max_value: 50
+    step: 0.1
+    mode: box
+    update_interval: never
+    optimistic: true
+    restore_value: true
+    initial_value: -3
+    icon: "mdi:thermometer"
+    entity_category: config
+  - platform: template
+    name: "Humidity Offset"
+    id: humidity_offset
+    unit_of_measurement: "%"
+    min_value: -50
+    max_value: 50
+    step: 0.1
+    mode: box
+    update_interval: never
+    optimistic: true
+    restore_value: true
+    initial_value: 0
+    icon: "mdi:water-percent"
+    entity_category: config
+  - platform: template
+    name: "Illuminance Offset"
+    id: illuminance_offset
+    unit_of_measurement: "lx"
+    min_value: -50
+    max_value: 50
+    step: 1
+    mode: box
+    update_interval: never
+    optimistic: true
+    restore_value: true
+    initial_value: 0
+    icon: "mdi:brightness-5"
+    entity_category: config
+
+button:
+  - platform: restart
+    name: "Restart"
+    entity_category: diagnostic
+  - platform: template
+    name: "Restart ${ld2410_name}"
+    entity_category: diagnostic
+    icon: "mdi:restart"
+    on_press:
+      script.execute: reboot_ld2410
+  - platform: template
+    name: "Factory Reset ${ld2410_name}"
+    icon: "mdi:restart-alert"
+    entity_category: config
+    disabled_by_default: true
+    on_press:
+      - script.execute: factory_reset_ld2410
+  - platform: factory_reset
+    name: "Factory Reset"
+    icon: "mdi:restart-alert"
+    entity_category: config
+    disabled_by_default: true
+
+script:
+  - id: config_on_ld2410
+    then:
+      - lambda: "ld2410_ld2410component_id->set_config_mode(true);"
+      - delay: 50ms
+      - script.execute: clear_targets_ld2410
+  - id: config_off_ld2410
+    then:
+      - lambda: "ld2410_ld2410component_id->set_config_mode(false);"
+  - id: query_params_ld2410
+    then:
+      - lambda: "ld2410_ld2410component_id->query_parameters();"
+  - id: get_config_ld2410
+    then:
+      - script.execute: config_on_ld2410
+      - delay: 50ms
+      - script.execute: query_params_ld2410
+      - delay: 50ms
+      - script.execute: config_off_ld2410
+  - id: set_thresholds_ld2410
+    then:
+      - lambda: "ld2410_ld2410component_id->set_thresholds(id(moving_sensitivity_threshold_ld2410).state,id(still_sensitivity_threshold_ld2410).state);"
+  - id: reboot_ld2410
+    then:
+      - script.execute: clear_targets_ld2410
+      - lambda: "ld2410_ld2410component_id->reboot();"
+      - delay: 500ms
+      - script.execute: get_config_ld2410
+  - id: factory_reset_ld2410
+    then:
+    - script.execute: config_on_ld2410
+    - delay: 100ms
+    - lambda: "ld2410_ld2410component_id->factory_reset();"
+    - delay: 150ms
+    - lambda: "ld2410_ld2410component_id->reboot();"
+    - delay: 500ms
+    - script.execute: config_on_ld2410
+    - delay: 50ms
+    - script.execute: query_params_ld2410
+    - delay: 50ms
+    - script.execute: set_thresholds_ld2410
+    - delay: 50ms
+    - script.execute: config_off_ld2410
+  - id: clear_targets_ld2410
+    then:
+      - lambda: |-
+          id(moving_target_distance_ld2410).publish_state(0);
+          id(moving_target_energy_ld2410).publish_state(0);
+          id(still_target_distance_ld2410).publish_state(0);
+          id(still_target_energy_ld2410).publish_state(0);
+          id(target_detect_distance_ld2410).publish_state(0);

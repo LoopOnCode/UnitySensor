@@ -5,7 +5,7 @@ substitutions:
   name: unity
   device_name: Unity
   device_make: LoopOn
-  sw_version: "2.0.0"
+  sw_version: "2.0.1"
   bh1750_addr: "0x23" # Addr pad unsoldered=0x23 / soldered=0x5C
   ld2410_name: mmWave
 
@@ -167,7 +167,7 @@ sensor:
             window_size: 5
             send_every: 5
             send_first_at: 1
-        - lambda: "return x+id(temperature_offset).state;"
+        - lambda: "return x+id(temperature_offset).state-10;"
     humidity:
       name: "Humidity"
       filters:
@@ -289,7 +289,7 @@ number:
     update_interval: never
     optimistic: true
     restore_value: true
-    initial_value: -3
+    initial_value: 0
     icon: "mdi:thermometer"
     entity_category: config
   - platform: template

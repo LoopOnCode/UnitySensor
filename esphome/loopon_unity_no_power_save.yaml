@@ -5,12 +5,13 @@ substitutions:
   name: unity
   device_name: Unity
   device_make: LoopOn
-  sw_version: "1.2.13"
+  sw_version: "1.2.14"
   bh1750_addr: "0x23" # Addr pad unsoldered=0x23 / soldered=0x5C
   ld2410_name: mmWave
 
 esphome:
   name: "${name}"
+  friendly_name: "${device_name}"
   comment: "${device_name} by ${device_make}"
   name_add_mac_suffix: true
   min_version: "2024.6.1"
@@ -67,7 +68,6 @@ external_components:
 ld2410:
 
 logger:
-  baud_rate: 0 # LD2410 config issues when logger is enabled
 
 api:
 
@@ -330,7 +330,7 @@ button:
     on_press:
       - script.execute: factory_reset_ld2410
   - platform: factory_reset
-    name: ${device_name} Factory Reset
+    name: "${device_name} Factory Reset"
     icon: "mdi:restart-alert"
     entity_category: config
     disabled_by_default: true

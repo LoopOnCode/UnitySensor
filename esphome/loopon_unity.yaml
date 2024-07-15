@@ -5,7 +5,7 @@ substitutions:
   name: unity
   device_name: Unity
   device_make: LoopOn
-  sw_version: "1.2.14"
+  sw_version: "1.2.15"
   bh1750_addr: "0x23" # Addr pad unsoldered=0x23 / soldered=0x5C
   ld2410_name: mmWave
 
@@ -168,6 +168,9 @@ sensor:
       filters:
         - median
         - lambda: "return x+id(humidity_offset).state;"
+        - clamp: 
+            min_value: 0
+            max_value: 100
     update_interval: 12s
   - platform: bh1750
     name: "${device_name} Illuminance"

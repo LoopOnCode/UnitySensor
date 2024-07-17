@@ -5,7 +5,7 @@ substitutions:
   name: unity
   device_name: Unity
   device_make: LoopOn
-  sw_version: "2.0.2"
+  sw_version: "2.0.3"
   bh1750_addr: "0x23" # Addr pad unsoldered=0x23 / soldered=0x5C
   ld2410_name: mmWave
 
@@ -78,6 +78,11 @@ wifi:
   fast_connect: false
   output_power: 15
   ap:
+  on_connect:
+    - delay: 5s # Gives time for improv results to be transmitted
+    - ble.disable:
+  on_disconnect:
+    - ble.enable:
 
 captive_portal:
 
@@ -164,7 +169,7 @@ sensor:
       filters:
         - skip_initial: 3
         - median:
-            window_size: 10
+            window_size: 15
             send_every: 5
             send_first_at: 1
         - lambda: "return x+id(temperature_offset).state-10;"

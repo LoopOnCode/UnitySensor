@@ -5,7 +5,7 @@ substitutions:
   name: unity
   device_name: Unity
   device_make: LoopOn
-  sw_version: "1.2.15"
+  sw_version: "1.2.16"
   bh1750_addr: "0x23" # Addr pad unsoldered=0x23 / soldered=0x5C
   ld2410_name: mmWave
 
@@ -14,7 +14,7 @@ esphome:
   friendly_name: "${device_name}"
   comment: "${device_name} by ${device_make}"
   name_add_mac_suffix: true
-  min_version: "2024.6.1"
+  min_version: "2024.9.2"
   project:
     name: "${device_make}.${device_name}"
     version: "${sw_version}"
@@ -76,6 +76,7 @@ ota:
 
 wifi:
   fast_connect: false
+  enable_on_boot: true
   power_save_mode: none
   ap:
 

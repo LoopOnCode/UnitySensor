@@ -48,6 +48,13 @@ There are two ways to connect the Unity board to your WiFi network:
 5. Input your SSID and password.
 1. Click Save.
 
+#### The LED indictor has the following patterns:<!-- omit from toc -->
+- Solid: The service is active and waiting to be authorized.
+- Blinking once per second: The service is awaiting credentials.
+- Blinking 3 times per second with a break in between: The identify command has been used by the client.
+- Blinking 5 times per second: Credentials are being verified and saved to the device.
+- Off: The service is not running.
+
 ### Using the Access Point<!-- omit from toc -->
 1. Power up the Unity board.
 1. On your phone or computer, search for the Unity WiFi network.

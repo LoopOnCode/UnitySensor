@@ -5,7 +5,7 @@ substitutions:
   name: unity
   device_name: Unity
   device_make: LoopOn
-  sw_version: "2.0.4"
+  sw_version: "2.0.5"
   bh1750_addr: "0x23" # Addr pad unsoldered=0x23 / soldered=0x5C
   ld2410_name: mmWave
 
@@ -76,7 +76,7 @@ ota:
 
 wifi:
   fast_connect: false
-  output_power: 15
+  output_power: 10
   enable_on_boot: true
   power_save_mode: LIGHT
   ap:

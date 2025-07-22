@@ -1,0 +1,10 @@
+---
+extends: relaxed
+rules:
+  line-length:
+    max: 256
+    level: warning
+  document-start: disable
+ignore:
+  - ".esphome_cache/**"
+  - "esphome/.esphome/**"

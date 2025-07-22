@@ -1,0 +1,90 @@
+---
+version: "3"
+
+vars:
+  CACHE_DIR: "{{.USER_WORKING_DIR}}/.esphome_cache"
+
+tasks:
+  default:
+    desc: List all tasks
+    cmd: task --list-all
+
+  setup-cache:
+    desc: Create cache directories if they don't exist
+    cmds:
+      - mkdir -p "{{.CACHE_DIR}}/pip"
+      - mkdir -p "{{.CACHE_DIR}}/platformio"
+    generates:
+      - "{{.CACHE_DIR}}/pip"
+      - "{{.CACHE_DIR}}/platformio"
+
+  compile:
+    desc: Compile the ESPHome config
+    deps: [setup-cache]
+    cmd: >-
+      docker run --rm
+      -v "$PWD/esphome:/config"
+      -v "{{.CACHE_DIR}}/pip:/root/.cache/pip"
+      -v "{{.CACHE_DIR}}/platformio:/root/.platformio"
+      -it esphome/esphome compile loopon_unity_esp_idf.yaml
+
+  flash:
+    desc: Flash the ESPHome firmware to the Unity sensor
+    deps: [setup-cache]
+    cmds:
+      - echo "Flashing firmware to Unity sensor..."
+      - >-
+        docker run --rm
+        -v "$PWD/esphome:/config"
+        -v "{{.CACHE_DIR}}/pip:/root/.cache/pip"
+        -v "{{.CACHE_DIR}}/platformio:/root/.platformio"
+        --privileged
+        --network host
+        -v /dev:/dev
+        -it esphome/esphome
+        upload loopon_unity_esp_idf.yaml --device /dev/cu.usbmodem2101
+
+  monitor:
+    desc: Monitor the ESPHome firmware serial output
+    deps: [setup-cache]
+    cmds:
+      - echo "Connecting to Unity sensor serial monitor..."
+      - >-
+        docker run --rm
+        -v "$PWD/esphome:/config"
+        -v "{{.CACHE_DIR}}/pip:/root/.cache/pip"
+        -v "{{.CACHE_DIR}}/platformio:/root/.platformio"
+        --privileged
+        -v /dev:/dev
+        -it esphome/esphome
+        logs loopon_unity_esp_idf.yaml
+
+  run:
+    desc: Run and watch the ESPHome firmware in real-time (upload + monitor)
+    deps: [setup-cache]
+    cmds:
+      - echo "Running Unity sensor firmware (uploading and monitoring)..."
+      - >-
+        docker run --rm
+        -v "$PWD/esphome:/config"
+        -v "{{.CACHE_DIR}}/pip:/root/.cache/pip"
+        -v "{{.CACHE_DIR}}/platformio:/root/.platformio"
+        --privileged
+        -v /dev/cu.usbmodem2101:/dev/cu.usbmodem2101
+        -it esphome/esphome
+        run loopon_unity_esp_idf.yaml --device /dev/cu.usbmodem2101
+
+  log:
+    desc: Alternative way to monitor logs (same as monitor task)
+    deps: [setup-cache]
+    cmds:
+      - echo "Connecting to Unity sensor logs..."
+      - >-
+        docker run --rm
+        -v "$PWD/esphome:/config"
+        -v "{{.CACHE_DIR}}/pip:/root/.cache/pip"
+        -v "{{.CACHE_DIR}}/platformio:/root/.platformio"
+        --privileged
+        -v /dev:/dev
+        -it esphome/esphome
+        logs loopon_unity_esp_idf.yaml

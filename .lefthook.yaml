@@ -1,0 +1,9 @@
+---
+assert_lefthook_installed: true
+skip_lfs: true
+
+pre-commit:
+  parallel: true
+  jobs:
+    - name: yamllint
+      run: yamllint .

@@ -1,5 +1,5 @@
-## Unity by LoopOn
-## https://loopon.tech/products/unity-sensor
+# Unity by LoopOn
+# https://loopon.tech/products/unity-sensor
 
 substitutions:
   name: unity
@@ -165,7 +165,7 @@ sensor:
       filters:
         - median
         - lambda: "return x+id(humidity_offset).state;"
-        - clamp: 
+        - clamp:
             min_value: 0
             max_value: 100
     update_interval: 12s
@@ -177,7 +177,7 @@ sensor:
     update_interval: 60s
   - platform: ld2410
     moving_distance:
-      name : "${device_name} Moving Human Distance"
+      name: "${device_name} Moving Human Distance"
       id: moving_target_distance_ld2410
     still_distance:
       name: "${device_name} Still Human Distance"
@@ -369,19 +369,19 @@ script:
       - script.execute: get_config_ld2410
   - id: factory_reset_ld2410
     then:
-    - script.execute: config_on_ld2410
-    - delay: 100ms
-    - lambda: "ld2410_ld2410component_id->factory_reset();"
-    - delay: 150ms
-    - lambda: "ld2410_ld2410component_id->reboot();"
-    - delay: 500ms
-    - script.execute: config_on_ld2410
-    - delay: 50ms
-    - script.execute: query_params_ld2410
-    - delay: 50ms
-    - script.execute: set_thresholds_ld2410
-    - delay: 50ms
-    - script.execute: config_off_ld2410
+      - script.execute: config_on_ld2410
+      - delay: 100ms
+      - lambda: "ld2410_ld2410component_id->factory_reset();"
+      - delay: 150ms
+      - lambda: "ld2410_ld2410component_id->reboot();"
+      - delay: 500ms
+      - script.execute: config_on_ld2410
+      - delay: 50ms
+      - script.execute: query_params_ld2410
+      - delay: 50ms
+      - script.execute: set_thresholds_ld2410
+      - delay: 50ms
+      - script.execute: config_off_ld2410
   - id: clear_targets_ld2410
     then:
       - lambda: |-

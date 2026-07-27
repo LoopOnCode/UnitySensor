@@ -18,6 +18,10 @@ esphome:
   project:
     name: "${device_make}.${device_name}"
     version: "${sw_version}"
+  build_flags:
+    - "-DARDUINO_USB_MODE=1"
+    - "-DARDUINO_USB_CDC_ON_BOOT=1"
+    - "-DARDUINO_ESP32C3_DEV=1"
   platformio_options:
     board_build.mcu: esp32c3
     board_build.variant: esp32c3
@@ -25,7 +29,6 @@ esphome:
     board_build.f_cpu: 160000000L
     board_build.f_flash: 80000000L
     board_build.flash_size: 4MB
-    build_flags: -DARDUINO_USB_MODE=1 -DARDUINO_USB_CDC_ON_BOOT=1 -DARDUINO_ESP32C3_DEV=1
     upload_speed: 115200
   on_boot:
     priority: 600
